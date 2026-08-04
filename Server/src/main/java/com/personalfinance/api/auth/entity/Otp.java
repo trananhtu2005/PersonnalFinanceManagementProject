@@ -32,9 +32,12 @@ public class Otp {
     @Column(length = 6, nullable = false)
     private String code;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
     @Column(name = "expire_at", nullable = false)
     private LocalDateTime expireAt;
 
     @Column(name = "is_used", nullable = false)
-    private boolean isUsed;
+    private boolean used;
 }

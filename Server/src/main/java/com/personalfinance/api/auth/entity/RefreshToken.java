@@ -37,7 +37,7 @@ public class RefreshToken {
     private LocalDateTime expireAt;
 
     @Column(name = "is_revoked", nullable = false)
-    private boolean isRevoked;
+    private boolean revoked;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
