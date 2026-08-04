@@ -1,5 +1,5 @@
 package com.personalfinance.api.category.entity;
 
 public enum CategoryType {
-    INCOME, EXPENSE;
+    INCOME, EXPENSE, SAVING;
 }

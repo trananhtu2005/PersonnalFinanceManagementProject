@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "usernames")
@@ -32,6 +33,7 @@ public class Username {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @CreationTimestamp
     @Column(name = "changed_at", nullable = false)
     private LocalDateTime changedAt;
 

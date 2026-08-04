@@ -38,7 +38,7 @@ public class Notification {
     private String content;
 
     @Column(name = "is_read", nullable = false)
-    private boolean isRead;
+    private boolean read;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)

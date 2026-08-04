@@ -1,6 +1,7 @@
 package com.personalfinance.api.transaction.entity;
 
 import com.personalfinance.api.category.entity.Category;
+import com.personalfinance.api.saving_goal.entity.SavingGoal;
 import com.personalfinance.api.user.entity.User;
 import com.personalfinance.api.wallet.entity.Wallet;
 import jakarta.persistence.Column;

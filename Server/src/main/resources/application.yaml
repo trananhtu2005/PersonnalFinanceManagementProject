@@ -16,3 +16,24 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  mail:
+    host: ${BREVO_SMTP_HOST}
+    port: 587
+    username: ${BREVO_SMTP_USERNAME}
+    password: ${BREVO_SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-expiration: ${JWT_ACCESS_EXPIRATION}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION}
+    
+otp:
+  expiration: ${OTP_EXPIRATION}
+  resend-delay: ${OTP_RESEND_DELAY}
