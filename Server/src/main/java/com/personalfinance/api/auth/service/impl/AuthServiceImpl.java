@@ -10,6 +10,7 @@ import com.personalfinance.api.auth.entity.Otp;
 import com.personalfinance.api.auth.entity.RefreshToken;
 import com.personalfinance.api.auth.service.AuthService;
 import com.personalfinance.api.auth.service.OtpService;
+import com.personalfinance.api.auth.service.PasswordService;
 import com.personalfinance.api.auth.service.RefreshTokenService;
 import com.personalfinance.api.mail.service.EmailService;
 import com.personalfinance.api.user.entity.Role;
@@ -17,17 +18,16 @@ import com.personalfinance.api.user.entity.User;
 import com.personalfinance.api.user.entity.Username;
 import com.personalfinance.api.user.repository.UserRepository;
 import com.personalfinance.api.user.repository.UsernameRepository;
+import com.personalfinance.api.user.service.UsernameService;
 import com.personalfinance.exception.AppException;
 import com.personalfinance.exception.ErrorCode;
 import com.personalfinance.security.jwt.JwtService;
 import com.personalfinance.security.user.CustomUserDetails;
 import com.personalfinance.validator.EmailValidator;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +41,8 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
     private final EmailService emailService;
-    private final PasswordEncoder passwordEncoder;
+    private final UsernameService usernameService;
+    private final PasswordService passwordService;
     private final EmailValidator emailValidator;
     private final AuthenticationManager authenticationManager;
 
@@ -51,21 +52,9 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private void validatePassword(String password, String confirmPassword) {
-        if (!Objects.equals(password, confirmPassword)) {
-            throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
-        }
-    }
-
     private void checkDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-        }
-    }
-
-    private void checkDuplicateUsername(String username) {
-        if (usernameRepository.existsByUsername(username)) {
-            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
     }
 
@@ -73,20 +62,22 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void register(RegisterRequest request) {
         validateEmail(request.getEmail());
-        validatePassword(request.getPassword(), request.getConfirmPassword());
+        passwordService.validatePassword(request.getPassword(), request.getConfirmPassword());
         checkDuplicateEmail(request.getEmail());
-        checkDuplicateUsername(request.getUsername());
+        usernameService.checkDuplicateUsername(request.getUsername());
 
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(passwordService.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
 
         userRepository.save(user);
 
-        Username username = new Username();
-        username.setUsername(request.getUsername());
-        username.setUser(user);
+        Username username = Username.builder()
+                .username(request.getUsername())
+                .user(user)
+                .build();
 
         usernameRepository.save(username);
         emailService.sendWelcomeEmail(user);
@@ -149,11 +140,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        validatePassword(request.getPassword(), request.getConfirmPassword());
+        passwordService.validatePassword(request.getPassword(), request.getConfirmPassword());
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
         Otp otp = otpService.getValidOtp(request.getEmail(), request.getOtp());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPassword(passwordService.encode(request.getPassword()));
         userRepository.save(user);
         otpService.useOtp(otp);
         refreshTokenService.revokeAll(user);

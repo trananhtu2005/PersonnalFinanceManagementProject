@@ -9,15 +9,15 @@ import lombok.Setter;
 @Setter
 public class RegisterRequest {
 
-    @NotBlank
+    @NotBlank(message = "Email is required!")
     private String email;
 
-    @NotBlank
-    @Size(min = 6, max = 50)
+    @NotBlank(message = "Username is required!")
+    @Size(min = 6, max = 50, message = "Username must be beetween 6 and 50 characters!")
     private String username;
 
-    @NotBlank
-    @Size(min = 6, max = 50)
+    @NotBlank(message = "Password is required!")
+    @Size(min = 6, max = 50, message = "Password must be beetween 6 and 50 characters!")
     private String password;
 
     private String confirmPassword;

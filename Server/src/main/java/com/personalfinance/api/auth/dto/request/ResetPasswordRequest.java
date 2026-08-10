@@ -9,14 +9,14 @@ import lombok.Setter;
 @Setter
 public class ResetPasswordRequest {
 
-    @NotBlank
+    @NotBlank(message = "Email is required!")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "OTP is required!")
     private String otp;
 
-    @NotBlank
-    @Size(min = 6, max = 50)
+    @NotBlank(message = "Password is required!")
+    @Size(min = 6, max = 50, message = "Password must be beetween 6 and 50 characters!")
     private String password;
 
     private String confirmPassword;
