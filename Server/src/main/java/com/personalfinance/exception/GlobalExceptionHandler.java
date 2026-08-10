@@ -3,8 +3,10 @@ package com.personalfinance.exception;
 import com.personalfinance.common.ApiErrorResponse;
 import io.jsonwebtoken.JwtException;
 import java.time.LocalDateTime;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -54,5 +56,20 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(errorCode.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .getFirst()
+                .getDefaultMessage();
+        ApiErrorResponse response = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(message)
+                .build();
+
+        return ResponseEntity.badRequest().body(response);
     }
 }
