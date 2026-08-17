@@ -20,10 +20,13 @@ public class UpdateSavingGoalRequest {
     @Future(message = "End date must be in the future!")
     private LocalDate endAt;
 
+    private Integer categoryId;
+
     public boolean isEmpty() {
         return title == null
                 && description == null
                 && target == null
-                && endAt == null;
+                && endAt == null
+                && categoryId == null;
     }
 }

@@ -18,4 +18,5 @@ public class SavingGoalResponse {
     private final LocalDate startAt;
     private final LocalDate endAt;
     private final SavingStatus status;
+    private final String categoryName;
 }

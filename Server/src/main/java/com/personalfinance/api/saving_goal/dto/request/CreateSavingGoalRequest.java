@@ -24,4 +24,7 @@ public class CreateSavingGoalRequest {
     @NotBlank(message = "End date is required!")
     @Future(message = "End date must be in the future!")
     private LocalDate endAt;
+
+    @NotBlank(message = "Category is required!")
+    private Integer categoryId;
 }

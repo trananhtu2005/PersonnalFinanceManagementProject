@@ -33,6 +33,7 @@ public class SavingGoalController {
     @GetMapping
     public ResponseEntity<Page<SavingGoalResponse>> getAllSavingGoals(
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
         return ResponseEntity.ok(savingGoalService.getAllSavingGoals(pageable));
     }
 
