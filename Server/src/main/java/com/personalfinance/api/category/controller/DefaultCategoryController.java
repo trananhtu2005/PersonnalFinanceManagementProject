@@ -35,7 +35,7 @@ public class DefaultCategoryController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<MessageResponse> createDefaultCategory(@Valid @RequestBody CreateDefaultCategoryRequest request) {
         defaultCategoryService.createDefaultCategory(request);
         MessageResponse response = MessageResponse.builder()
@@ -46,7 +46,7 @@ public class DefaultCategoryController {
                 .body(response);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/admin/{id}")
     public ResponseEntity<MessageResponse> updateDefaultCategory(@PathVariable("id") Integer id, @RequestBody UpdateDefaultCategoryRequest request) {
         defaultCategoryService.updateDefaultCategory(id, request);
         MessageResponse response = MessageResponse.builder()
@@ -56,7 +56,7 @@ public class DefaultCategoryController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<MessageResponse> deleteDefaultCategory(@PathVariable("id") Integer id) {
         defaultCategoryService.deleteDefaultCategory(id);
         MessageResponse response = MessageResponse.builder()

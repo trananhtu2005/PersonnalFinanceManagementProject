@@ -38,6 +38,9 @@ public class Category {
     @Column(nullable = false)
     private CategoryType type;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean deleted;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

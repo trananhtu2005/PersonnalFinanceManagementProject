@@ -10,13 +10,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    boolean existsByUserAndName(User user, String name);
+    boolean existsByUserAndNameAndDeletedFalse(User user, String name);
 
-    Optional<Category> findByIdAndUser(Integer id, User user);
-
-    @EntityGraph(attributePaths = "color")
-    List<Category> findByUser(User user);
+    Optional<Category> findByIdAndUserAndDeletedFalse(Integer id, User user);
 
     @EntityGraph(attributePaths = "color")
-    List<Category> findByUserAndType(User user, CategoryType type);
+    List<Category> findByUserAndDeletedFalse(User user);
+
+    @EntityGraph(attributePaths = "color")
+    List<Category> findByUserAndTypeAndDeletedFalse(User user, CategoryType type);
 }

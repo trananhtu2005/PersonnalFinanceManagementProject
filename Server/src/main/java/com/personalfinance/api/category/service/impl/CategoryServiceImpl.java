@@ -31,9 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories;
 
         if (type == null) {
-            categories = categoryRepository.findByUser(user);
+            categories = categoryRepository.findByUserAndDeletedFalse(user);
         } else {
-            categories = categoryRepository.findByUserAndType(user, type);
+            categories = categoryRepository.findByUserAndTypeAndDeletedFalse(user, type);
         }
 
         return categories.stream().map(c
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void createCategory(CreateCategoryRequest request) {
         User user = currentUserService.getCurrentUser();
 
-        if (categoryRepository.existsByUserAndName(user, request.getName())) {
+        if (categoryRepository.existsByUserAndNameAndDeletedFalse(user, request.getName())) {
             throw new AppException(ErrorCode.CATEGORY_ALREADY_EXISTS);
         }
 
@@ -73,11 +73,11 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         User user = currentUserService.getCurrentUser();
-        Category category = categoryRepository.findByIdAndUser(id, user)
+        Category category = categoryRepository.findByIdAndUserAndDeletedFalse(id, user)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         if (request.getName() != null) {
-            if (categoryRepository.existsByUserAndName(user, request.getName())) {
+            if (categoryRepository.existsByUserAndNameAndDeletedFalse(user, request.getName())) {
                 throw new AppException(ErrorCode.CATEGORY_ALREADY_EXISTS);
             }
 
@@ -98,8 +98,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(Integer id) {
         User user = currentUserService.getCurrentUser();
-        Category category = categoryRepository.findByIdAndUser(id, user)
+        Category category = categoryRepository.findByIdAndUserAndDeletedFalse(id, user)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-        categoryRepository.delete(category);
+        category.setDeleted(true);
+        categoryRepository.save(category);
     }
 }

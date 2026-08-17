@@ -33,7 +33,7 @@ public class ColorController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<MessageResponse> createColor(@Valid @RequestBody CreateColorRequest request) {
         colorService.createColor(request);
         MessageResponse response = MessageResponse.builder()
@@ -44,7 +44,7 @@ public class ColorController {
                 .body(response);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/admin/{id}")
     public ResponseEntity<MessageResponse> updateColor(@PathVariable("id") Integer id, @RequestBody UpdateColorRequest request) {
         colorService.updateColor(id, request);
         MessageResponse response = MessageResponse.builder()
@@ -54,7 +54,7 @@ public class ColorController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<MessageResponse> deleteColor(@PathVariable("id") Integer id) {
         colorService.deleteColor(id);
         MessageResponse response = MessageResponse.builder()
