@@ -35,6 +35,12 @@ public class Budget {
     private BigDecimal amount;
 
     @Column(nullable = false)
+    private BigDecimal spent;
+
+    @Column(name = "is_exceeded", nullable = false)
+    private boolean exceeded;
+
+    @Column(nullable = false)
     private Integer month;
 
     @Column(nullable = false)
