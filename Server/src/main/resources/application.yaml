@@ -22,12 +22,14 @@ spring:
     port: 587
     username: ${BREVO_SMTP_USERNAME}
     password: ${BREVO_SMTP_PASSWORD}
+    from: ${BREVO_MAIL_FROM}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+            required: true
 
 jwt:
   secret: ${JWT_SECRET}
@@ -37,3 +39,6 @@ jwt:
 otp:
   expiration: ${OTP_EXPIRATION}
   resend-delay: ${OTP_RESEND_DELAY}
+  
+openai:
+  api-key: ${OPENAI_API_KEY}
