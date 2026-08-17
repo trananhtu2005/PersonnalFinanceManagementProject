@@ -2,6 +2,7 @@ package com.personalfinance.api.user.service.impl;
 
 import com.personalfinance.api.auth.service.PasswordService;
 import com.personalfinance.api.auth.service.RefreshTokenService;
+import com.personalfinance.api.notification.service.NotificationService;
 import com.personalfinance.api.user.dto.request.ChangePasswordRequest;
 import com.personalfinance.api.user.dto.request.ChangeUsernameRequest;
 import com.personalfinance.api.user.dto.response.UserProfileResponse;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordService passwordService;
     private final RefreshTokenService refreshTokenService;
     private final CurrentUserService currentUserService;
+    private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final UsernameRepository usernameRepository;
 
@@ -51,6 +53,9 @@ public class UserServiceImpl implements UserService {
         username.setUsername(request.getUsername());
         username.setChangedAt(LocalDateTime.now());
         usernameRepository.save(username);
+        notificationService.createNotification("Username has been changed!",
+                "Your username has been changed successfully!",
+                user);
     }
 
     @Override
@@ -62,5 +67,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordService.encode(request.getNewPassword()));
         userRepository.save(user);
         refreshTokenService.revokeAll(user);
+        notificationService.createNotification("Password has been changed!",
+                "Your password has been changed successfully!",
+                user);
     }
 }

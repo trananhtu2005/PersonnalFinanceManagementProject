@@ -30,7 +30,17 @@ public enum ErrorCode {
     WALLET_NOT_FOUND(HttpStatus.NOT_FOUND, "WALLET_002", "Wallet is not found!"),
     COLOR_NAME_ALREADY_EXISTS(HttpStatus.CONFLICT, "COLOR_002", "Color name already exists!"),
     COLOR_CODE_ALREADY_EXISTS(HttpStatus.CONFLICT, "COLOR_003", "Color code already exists!"),
-    SAVING_GOAL_NOT_FOUND(HttpStatus.NOT_FOUND, "SAVING_GOAL_001", "Saving goal is not found!");
+    SAVING_GOAL_NOT_FOUND(HttpStatus.NOT_FOUND, "SAVING_GOAL_001", "Saving goal is not found!"),
+    INVALID_SAVING_CATEGORY(HttpStatus.BAD_REQUEST, "CATEGORY_003", "Category is not a saving category!"),
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION_001", "Notification is not found!"),
+    PAYMENT_REMINDER_NOT_FOUND(HttpStatus.NOT_FOUND, "PAYMENT_REMINDER_001", "Payment reminder is not found!"),
+    TRANSACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "TRANSACTION_001", "Transaction is not found!"),
+    INVALID_MONTH(HttpStatus.BAD_REQUEST, "COMMON_002", "Month must be between 1 and 12!"),
+    INVALID_YEAR(HttpStatus.BAD_REQUEST, "COMMON_003", "Year must be at least 1970 and cannot exceed the current year!"),
+    BUDGET_ALREADY_EXISTS(HttpStatus.CONFLICT, "BUDGET_001", "Budget already exists!"),
+    BUDGET_NOT_FOUND(HttpStatus.NOT_FOUND, "BUDGET_002", "Budget is not found!"),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_004", "An unexpected error occured!"),
+    AI_ANALYSIS_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AI_001", "AI analysis failed!");
 
     private final HttpStatus status;
     private final String code;
