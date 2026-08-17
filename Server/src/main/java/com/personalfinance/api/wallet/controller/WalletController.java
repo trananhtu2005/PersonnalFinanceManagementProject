@@ -45,7 +45,7 @@ public class WalletController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<MessageResponse> updateWallet(@PathVariable("id") Integer id, @RequestBody UpdateWalletRequest request) {
+    public ResponseEntity<MessageResponse> updateWallet(@PathVariable("id") Integer id, @Valid @RequestBody UpdateWalletRequest request) {
         walletService.updateWallet(id, request);
         MessageResponse response = MessageResponse.builder()
                 .message("Wallet has been updated successfully!")
