@@ -40,5 +40,5 @@ otp:
   expiration: ${OTP_EXPIRATION}
   resend-delay: ${OTP_RESEND_DELAY}
   
-openai:
-  api-key: ${OPENAI_API_KEY}
+gemini:
+  api-key: ${GEMINI_API_KEY}

@@ -2,6 +2,7 @@ package com.personalfinance.api.budget.repository;
 
 import com.personalfinance.api.budget.entity.Budget;
 import com.personalfinance.api.category.entity.Category;
+import com.personalfinance.api.category.entity.CategoryType;
 import com.personalfinance.api.user.entity.User;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
            FROM Category c
            WHERE c.user = :user
            AND c.deleted = false
+           AND c.type IN :types
            AND NOT EXISTS (
                SELECT b.id
                FROM Budget b
@@ -41,6 +43,7 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
     List<Category> findCategoriesForSuggestion(
             @Param("user") User user,
             @Param("month") Integer month,
-            @Param("year") Integer year
+            @Param("year") Integer year,
+            @Param("types") List<CategoryType> types
     );
 }

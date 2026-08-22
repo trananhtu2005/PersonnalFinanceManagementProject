@@ -41,7 +41,8 @@ public enum ErrorCode {
     BUDGET_NOT_FOUND(HttpStatus.NOT_FOUND, "BUDGET_002", "Budget is not found!"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_004", "An unexpected error occured!"),
     AI_ANALYSIS_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AI_001", "AI analysis failed!"),
-    INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, "WALLET_003", "Insufficient wallet balance!");
+    INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, "WALLET_003", "Insufficient wallet balance!"),
+    INCOME_TYPE_REJECT(HttpStatus.BAD_REQUEST, "BUDGET_003", "Budget does not create an income-type category!");
 
     private final HttpStatus status;
     private final String code;

@@ -8,6 +8,7 @@ import com.personalfinance.api.budget.repository.BudgetRepository;
 import com.personalfinance.api.budget.service.BudgetService;
 import com.personalfinance.api.category.dto.response.CategoryResponse;
 import com.personalfinance.api.category.entity.Category;
+import com.personalfinance.api.category.entity.CategoryType;
 import com.personalfinance.api.category.repository.CategoryRepository;
 import com.personalfinance.api.notification.service.NotificationService;
 import com.personalfinance.api.transaction.repository.TransactionRepository;
@@ -98,7 +99,10 @@ public class BudgetServiceImpl implements BudgetService {
     public List<CategoryResponse> getCategoriesForSuggestion() {
         User user = currentUserService.getCurrentUser();
         YearMonth current = YearMonth.now();
-        List<Category> categories = budgetRepository.findCategoriesForSuggestion(user, current.getMonthValue(), current.getYear());
+        List<Category> categories = budgetRepository.findCategoriesForSuggestion(user,
+                current.getMonthValue(),
+                current.getYear(),
+                List.of(CategoryType.EXPENSE, CategoryType.SAVING));
 
         return categories.stream()
                 .map(c -> CategoryResponse.builder()
@@ -120,6 +124,10 @@ public class BudgetServiceImpl implements BudgetService {
         Category category = categoryRepository.findByIdAndUserAndDeletedFalse(request.getCategoryId(), user)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
+        if (category.getType() != CategoryType.EXPENSE
+                && category.getType() != CategoryType.SAVING) {
+            throw new AppException(ErrorCode.INCOME_TYPE_REJECT);
+        }
         if (budgetRepository.existsByUserAndCategoryAndMonthAndYear(user, category, month, year)) {
             throw new AppException(ErrorCode.BUDGET_ALREADY_EXISTS);
         }
@@ -210,11 +218,13 @@ public class BudgetServiceImpl implements BudgetService {
         boolean exceeded = spent.compareTo(budget.getAmount()) >= 0;
         budget.setExceeded(exceeded);
         YearMonth current = YearMonth.now();
-        
+
         if (!wasExceeded && exceeded && yearMonth.equals(current)) {
             notificationService.createNotification("Warning!",
                     "You have a budget that has been exceeded!",
                     user);
         }
+
+        budgetRepository.save(budget);
     }
 }

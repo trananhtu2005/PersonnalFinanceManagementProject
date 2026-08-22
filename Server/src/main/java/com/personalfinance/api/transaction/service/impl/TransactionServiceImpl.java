@@ -175,6 +175,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
     
     @Override
+    @Transactional
     public void deleteTransaction(Integer id) {
         User user = currentUserService.getCurrentUser();
         Transaction transaction = transactionRepository.findByIdAndUser(id, user)
