@@ -1,7 +1,8 @@
 package com.personalfinance.api.transaction.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -11,18 +12,21 @@ import lombok.Setter;
 @Setter
 public class CreateTransactionRequest {
 
-    @NotBlank(message = "Amount is required!")
+    @NotNull(message = "Amount is required!")
     @DecimalMin(value = "0.01", message = "Amount must be greater than 0!")
     private BigDecimal amount;
 
     private String note;
 
-    @NotBlank(message = "Date is required!")
+    @NotNull(message = "Date is required!")
+    @PastOrPresent(message = "Time must be in the past or the present!")
     private LocalDateTime date;
 
-    @NotBlank(message = "Wallet is required!")
+    @NotNull(message = "Wallet is required!")
     private Integer walletId;
 
-    @NotBlank(message = "Category is required!")
+    @NotNull(message = "Category is required!")
     private Integer categoryId;
+    
+    private Integer savingGoalId;
 }

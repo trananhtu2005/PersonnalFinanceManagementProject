@@ -3,6 +3,7 @@ package com.personalfinance.api.saving_goal.dto.request;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -17,14 +18,14 @@ public class CreateSavingGoalRequest {
 
     private String description;
 
-    @NotBlank(message = "Target is required!")
+    @NotNull(message = "Target is required!")
     @DecimalMin(value = "0.01", message = "Target must be greater than 0!")
     private BigDecimal target;
 
-    @NotBlank(message = "End date is required!")
+    @NotNull(message = "End date is required!")
     @Future(message = "End date must be in the future!")
     private LocalDate endAt;
 
-    @NotBlank(message = "Category is required!")
+    @NotNull(message = "Category is required!")
     private Integer categoryId;
 }

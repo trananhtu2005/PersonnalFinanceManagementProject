@@ -40,7 +40,8 @@ public enum ErrorCode {
     BUDGET_ALREADY_EXISTS(HttpStatus.CONFLICT, "BUDGET_001", "Budget already exists!"),
     BUDGET_NOT_FOUND(HttpStatus.NOT_FOUND, "BUDGET_002", "Budget is not found!"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_004", "An unexpected error occured!"),
-    AI_ANALYSIS_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AI_001", "AI analysis failed!");
+    AI_ANALYSIS_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AI_001", "AI analysis failed!"),
+    INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, "WALLET_003", "Insufficient wallet balance!");
 
     private final HttpStatus status;
     private final String code;

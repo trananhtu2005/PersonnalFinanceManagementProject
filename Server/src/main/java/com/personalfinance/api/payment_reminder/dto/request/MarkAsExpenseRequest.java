@@ -1,6 +1,6 @@
 package com.personalfinance.api.payment_reminder.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 public class MarkAsExpenseRequest {
 
-    @NotBlank(message = "Wallet is required!")
+    @NotNull(message = "Wallet is required!")
     private Integer walletId;
 }

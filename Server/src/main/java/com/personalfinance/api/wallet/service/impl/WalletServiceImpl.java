@@ -10,6 +10,7 @@ import com.personalfinance.api.wallet.repository.WalletRepository;
 import com.personalfinance.api.wallet.service.WalletService;
 import com.personalfinance.exception.AppException;
 import com.personalfinance.exception.ErrorCode;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class WalletServiceImpl implements WalletService {
-    
+
     private final WalletRepository walletRepository;
     private final CurrentUserService currentUserService;
-    
+
     @Override
     public List<WalletResponse> getAllWallets() {
         User user = currentUserService.getCurrentUser();
         List<Wallet> wallets = walletRepository.findByUserAndDeletedFalse(user);
-        
+
         return wallets.stream().map(w
                 -> WalletResponse.builder()
                         .id(w.getId())
@@ -34,15 +35,15 @@ public class WalletServiceImpl implements WalletService {
                         .build()
         ).toList();
     }
-    
+
     @Override
     public void createWallet(CreateWalletRequest request) {
         User user = currentUserService.getCurrentUser();
-        
+
         if (walletRepository.existsByUserAndNameAndDeletedFalse(user, request.getName())) {
             throw new AppException(ErrorCode.WALLET_ALREADY_EXISTS);
         }
-        
+
         Wallet wallet = Wallet.builder()
                 .name(request.getName())
                 .balance(request.getBalance())
@@ -51,37 +52,53 @@ public class WalletServiceImpl implements WalletService {
                 .build();
         walletRepository.save(wallet);
     }
-    
+
     @Override
     public void updateWallet(Integer id, UpdateWalletRequest request) {
         if (request.isEmpty()) {
             throw new AppException(ErrorCode.NO_DATA_TO_UPDATE);
         }
-        
+
         User user = currentUserService.getCurrentUser();
         Wallet wallet = walletRepository.findByIdAndUserAndDeletedFalse(id, user)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
-        
+
         if (request.getName() != null) {
             if (walletRepository.existsByUserAndNameAndDeletedFalse(user, request.getName())) {
                 throw new AppException(ErrorCode.WALLET_ALREADY_EXISTS);
             }
-            
+
             wallet.setName(request.getName());
         }
         if (request.getBalance() != null) {
             wallet.setBalance(request.getBalance());
         }
-        
+
         walletRepository.save(wallet);
     }
-    
+
     @Override
     public void deleteWallet(Integer id) {
         User user = currentUserService.getCurrentUser();
         Wallet wallet = walletRepository.findByIdAndUserAndDeletedFalse(id, user)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
         wallet.setDeleted(true);
+        walletRepository.save(wallet);
+    }
+
+    @Override
+    public void addBalance(Wallet wallet, BigDecimal amount) {
+        wallet.setBalance(wallet.getBalance().add(amount));
+        walletRepository.save(wallet);
+    }
+
+    @Override
+    public void subtractBalance(Wallet wallet, BigDecimal amount) {
+        if (wallet.getBalance().compareTo(amount) < 0) {
+            throw new AppException(ErrorCode.INSUFFICIENT_BALANCE);
+        }
+
+        wallet.setBalance(wallet.getBalance().subtract(amount));
         walletRepository.save(wallet);
     }
 }

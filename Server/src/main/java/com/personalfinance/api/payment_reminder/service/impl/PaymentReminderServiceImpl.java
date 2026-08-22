@@ -15,8 +15,10 @@ import com.personalfinance.api.user.entity.User;
 import com.personalfinance.api.user.service.CurrentUserService;
 import com.personalfinance.api.wallet.entity.Wallet;
 import com.personalfinance.api.wallet.repository.WalletRepository;
+import com.personalfinance.api.wallet.service.WalletService;
 import com.personalfinance.exception.AppException;
 import com.personalfinance.exception.ErrorCode;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class PaymentReminderServiceImpl implements PaymentReminderService {
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
     private final CurrentUserService currentUserService;
+    private final WalletService walletService;
 
     @Override
     public List<PaymentReminderResponse> getAllPaymentReminders() {
@@ -116,6 +119,7 @@ public class PaymentReminderServiceImpl implements PaymentReminderService {
                 .build();
 
         transactionRepository.save(transaction);
+        walletService.subtractBalance(wallet, transaction.getAmount());
         paymentReminderRepository.delete(paymentReminder);
     }
 

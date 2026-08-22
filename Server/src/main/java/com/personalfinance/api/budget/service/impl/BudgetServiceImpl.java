@@ -193,8 +193,12 @@ public class BudgetServiceImpl implements BudgetService {
         Budget budget = budgetRepository.findByUserAndCategoryAndMonthAndYear(user,
                 category,
                 yearMonth.getMonthValue(),
-                yearMonth.getYear())
-                .orElseThrow(() -> new AppException(ErrorCode.BUDGET_NOT_FOUND));
+                yearMonth.getYear()).orElse(null);
+
+        if (budget == null) {
+            return;
+        }
+
         LocalDateTime startDate = yearMonth.atDay(1)
                 .atStartOfDay();
         LocalDateTime endDate = yearMonth.plusMonths(1)
@@ -203,9 +207,10 @@ public class BudgetServiceImpl implements BudgetService {
         BigDecimal spent = transactionRepository.sumAmountByUserAndCategoryAndDateRange(user, category, startDate, endDate);
         boolean wasExceeded = budget.isExceeded();
         budget.setSpent(spent);
-        boolean exceeded = spent.compareTo(budget.getAmount()) > 0;
+        boolean exceeded = spent.compareTo(budget.getAmount()) >= 0;
         budget.setExceeded(exceeded);
         YearMonth current = YearMonth.now();
+        
         if (!wasExceeded && exceeded && yearMonth.equals(current)) {
             notificationService.createNotification("Warning!",
                     "You have a budget that has been exceeded!",
